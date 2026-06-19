@@ -35,7 +35,8 @@ The tail will never wag the cat.
 So ce-lang will never break c syntax, except the old `:>` as `]` design.   
 But as ce will translate .ce to c, and if you only use `:>` as happy face in .ce, that's fine.    
 In one word, CE-lang makes a zipped error handling in C, and it's kawaii.      
-# CE-lang design goals:
+# The .hce header:
+.hce stands for `happy c ending`, it's just a kv-map to register error expr and handler for funcs. maybe we can also have standard hce conf like posix.hce.      
 ```ce
 // Register function type and failure condition
 #[[ce_reg(func, type, exp)]]
@@ -48,8 +49,10 @@ In one word, CE-lang makes a zipped error handling in C, and it's kawaii.
 // For example:
 #[[ce_pan(open, panic)]]
 #[[ce_dft(open, log)]]
+```
 
-// So you can do:
+# CE-lang design goals:
+```ce
 // Will call panic() if open returns < 0
 int fd = open("file.txt", O_RDONLY) :<;
 
@@ -76,3 +79,12 @@ int fd_4 = open("file4.txt", O_RDONLY) :<
 }
 :>;
 ```
+
+# Note:
+CE-lang has no super cow powers.    
+The tail will never wag the cat.    
+CE-lang is just for zipping complex unhappy path logic, and make it more readable.    
+CE-lang just implements `:<` and `:>`, `and #[[ce_foo()]]`, the rest is just C code, and every CE-lang feature will be translated to C code, You debug/run the generated C code, not the CE-lang code.   
+#[[ce_reg()]] is enforced, or ce will not know how to handle the error.      
+In one word, CE-lang is like yet another C-style .unwrap().    
+And, there will be many ubs, so always do a diff-check between .ce and .c, and make sure the generated code is what you want.    
