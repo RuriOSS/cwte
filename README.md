@@ -2,23 +2,23 @@
 >[!WARNING]
 >Nothoing implemented yet, just some design ideas.    
 
-But, if you throw this doc to LLM, let LLM refine it to spec, and use LLM as your ceg, you have ce-mark right now.    
+But, if you throw this doc to LLM, let LLM refine it to spec, and use LLM as your ceg, you have cwte right now.    
 "I'm a lazy dev, and I used :< sad face to mark the code that mignt fail, as my assistant, you should implement the :< mark as error handling logic for these code".   
 And, the real ce-generator will just be a pre-compile code generator for ruri. It will not act on other unnecessary features that I will not use it in my code.     
 # Version:
 v0.0, just a draft, not a spec or implementation yet.     
-# About ce-mark:
-Not Conformity European mark, we are not factory :>     
+# About cwte:
+cwte stands for "Cute way to handle error/C with tailed error-handler", it's a cute and concise error handling extension for C, with zero syntax breaking, and the tail will never wag the cat.     
 Just a cute error handling extension for C.    
 With no syntax breaking, and the tail will never wag the cat.    
 We will just have a new happy face `:>` for default handling, and a sad face `:<` for error handling, and `#[[ce_foo()]]` for code generation.      
-These syntax will be translated to C code, you can use ce-mark for error handling, CE-generator transform it to C, and you compile/run/debug the generated C code.      
+These syntax will be translated to C code, you can use cwte for error handling, CE-generator transform it to C, and you compile/run/debug the generated C code.      
 # The core:
 `:<` Is the only core feature, it's a tail after func call, for error handling.     
 The tail should never wag the cat, this means sad path handler should never pollute the core logic, and ce will also never pollute other c code.     
 The tail should never wag the cat also means `tail` command should not call `|cat` lol   
 
-# Why ce-mark:
+# Why cwte:
 In ruri:      
 ```c
 res = seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept), 0);
@@ -51,9 +51,9 @@ if(seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept), 0) != 0) {
 ```
 So that's CE lang, C with better Error handling/Cute Error handling.    
 The tail will never wag the cat.    
-So ce-mark will never break c syntax, except the old `:>` as `]` design.   
+So cwte will never break c syntax, except the old `:>` as `]` design.   
 But as ce will translate .ce to c, and if you only use `:>` as happy face in .ce, that's fine.    
-In one word, ce-mark makes a zipped error handling in C, and it's kawaii.      
+In one word, cwte makes a zipped error handling in C, and it's kawaii.      
 # Why sad face `:<`:
 - Cute and readable, it's like a sad face, and it zips the error handling logic, and make the code more concise and readable.    
 - Zero syntax breaking, :< never affects C grammar.    
@@ -76,7 +76,7 @@ In one word, ce-mark makes a zipped error handling in C, and it's kawaii.
 ```
 
 .hce shoud only contain the three simple commands, and other definations, like `#define panic()`, `#define log()`, and `typedef` should be in .ce or your .h, as .hce is just `happy c ending/handle c error` delclaration file.    
-# ce-mark design goals:
+# cwte design goals:
 ```c
 // Will call panic() if open returns < 0
 int fd = open("file.txt", O_RDONLY) :<;
@@ -109,17 +109,17 @@ int fd_5 = open("file5.txt", O_RDONLY) :>;
 ```
 
 # Note:
-ce-mark has no super cow powers.    
-ce-mark is a postfix, a tail, but not the cat (C-lang).    
+cwte has no super cow powers.    
+cwte is a postfix, a tail, but not the cat (C-lang).    
 The tail will never wag the cat.    
-ce-mark is just for zipping complex unhappy path logic, and make it more readable.    
-ce-mark just implements `:<` and `:>`, `and #[[ce_foo()]]`, the rest is just C code, and every ce-mark feature will be translated to C code, You debug/run the generated C code, not the ce-mark code.   
+cwte is just for zipping complex unhappy path logic, and make it more readable.    
+cwte just implements `:<` and `:>`, `and #[[ce_foo()]]`, the rest is just C code, and every cwte feature will be translated to C code, You debug/run the generated C code, not the cwte code.   
 #[[ce_reg()]] is enforced, or ce will not know how to handle the error.      
-In one word, ce-mark is like yet another C-style .unwrap().    
+In one word, cwte is like yet another C-style .unwrap().    
 And, there will be many ubs, so always do a diff-check between .ce and .c, and make sure the generated code is what you want.    
 You can use _CE_DFT for `:>` and _CE_PAN for `:<`, just recover with one `sed`, so your IDE and clang-format will not scream at it. But for `foo() :<, :>`, your IDE will scream anyway, although these code are less in real-world case.    
 
-ce-mark will use line-no for internal variable name, so you will match generited code with .ce easily.    
+cwte will use line-no for internal variable name, so you will match generited code with .ce easily.    
 # Future:
 Maybe we can have a `#[[ce_enforce(func)]]` to enforce you catch result for func in ce, and `:D` for ignoring the error, and `:o` for only log when error, `:~ { ... }` for a custom handler, and even `::}` to output a nautilus in ceg, and use `::}` as a readable todo note.        
 Maybe one day it can be C-Evolved, but at least these ideas shows that c is extensible, and ce is also.    
