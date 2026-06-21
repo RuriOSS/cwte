@@ -14,6 +14,7 @@ With no syntax breaking, and the tail will never wag the cat.
 We will just have a new happy face `:>` for default handling, and a sad face `:<` for error handling, and `#[[ce_foo()]]` for code generation.      
 These syntax will be translated to C code, you can use cwte for error handling, cwte-generator transform it to C, and you compile/run/debug the generated C code.      
 In short, cwte is just for zipping complex unhappy path logic, and make it more readable.    
+I just hope it can save some time, so we can have an ice cream.    
 # The core:
 `:<` Is the only core feature, it's a tail after func call, for error handling.     
 The tail should never wag the cat, this means sad path handler should never pollute the core logic, and cwte will also never pollute other c code.     
