@@ -39,7 +39,36 @@ fn setup_panic_hook() {
         }
     }));
 }
-
+fn cwte_generator(input: &str, output: &str) {
+    let input_file = fs::File::open(input).expect("Failed to open input file");
+    // Process the input file with prepare layer, and get the memfd file.
+    let mut mfd_file = lineno::prepare_layer(input_file);
+    // Process the input file with nautilus layer, and get the memfd file.
+    mfd_file = nautilus::nautilus_layer(mfd_file, input);
+    // Process the memfd file with linter layer, and get the new memfd file.
+    mfd_file = linter::linter_layer(mfd_file, input);
+    // Process the memfd file with final layer, and get the new memfd file.
+    mfd_file = lineno::final_layer(mfd_file);
+    // Write the content of memfd to the output file.
+    let mut output_file = fs::File::create(&output).expect("Failed to create output file");
+    let mut memfd_content = Vec::new();
+    mfd_file
+        .seek(std::io::SeekFrom::Start(0))
+        .expect("Failed to seek memfd");
+    mfd_file
+        .read_to_end(&mut memfd_content)
+        .expect("Failed to read memfd");
+    output_file
+        .write_all(&memfd_content)
+        .expect("Failed to write to output file");
+    println!(
+        "{}{}{}",
+        "\nCwte processing completed. Output written to ".green(),
+        output.blue(),
+        " >w<!!!".yellow()
+    );
+    println!("{}", "I hope I'm just a cute tail...".green());
+}
 fn main() {
     /*
      * We will never release any memfd file, kernel will help us do that.
@@ -54,33 +83,7 @@ fn main() {
         return;
     }
     // Open the input file.
-    let input_file = fs::File::open(&args[1]).expect("Failed to open input file");
-    // Process the input file with prepare layer, and get the memfd file.
-    let mut mfd_file = lineno::prepare_layer(input_file);
-    // Process the input file with nautilus layer, and get the memfd file.
-    mfd_file = nautilus::nautilus_layer(mfd_file, &args[1]);
-    // Process the memfd file with linter layer, and get the new memfd file.
-    mfd_file = linter::linter_layer(mfd_file, &args[1]);
-    // Process the memfd file with final layer, and get the new memfd file.
-    mfd_file = lineno::final_layer(mfd_file);
-    // Write the content of memfd to the output file.
-    let output_file = format!("{}.c", args[1]);
-    let mut output = fs::File::create(&output_file).expect("Failed to create output file");
-    let mut memfd_content = Vec::new();
-    mfd_file
-        .seek(std::io::SeekFrom::Start(0))
-        .expect("Failed to seek memfd");
-    mfd_file
-        .read_to_end(&mut memfd_content)
-        .expect("Failed to read memfd");
-    output
-        .write_all(&memfd_content)
-        .expect("Failed to write to output file");
-    println!(
-        "{}{}{}",
-        "\nCwte processing completed. Output written to ".green(),
-        output_file.blue(),
-        " >w<!!!".yellow()
-    );
-    println!("{}", "I hope I'm just a cute tail...".green());
+    let input = &args[1];
+    let output = format!("{}.c", input);
+    cwte_generator(input, &output);
 }
