@@ -83,6 +83,7 @@ pub fn final_layer(mut input: File) -> File {
     // Return the memfd file for further processing.
     mfd_file
 }
+
 pub fn get_line_no(line: &str) -> Result<usize, &'static str> {
     /*
      * Get the line number from @ce_line_xx@ mark, and return it.
