@@ -155,7 +155,7 @@ In security model:
 - Least privilege: each layer can only have one lower layer to read, and one upper layer to write.    
 - Zero trust: we never assume any of the layers is correct, so we make the chain fully auditable and traceable.     
 
-Rust users unhappy, fp users unhappy, but me happy, so leeme cook.      
+Rust users unhappy, fp users unhappy, but me happy, so leeme cook, with the 1980s style.      
 
 # cwte design goals:
 Warning: draft only, never assume anything, and never trust the tail.    
