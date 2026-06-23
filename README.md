@@ -50,11 +50,11 @@ We will just have a new sad face `:<` for error handling, and `#[[ce_foo()]]` fo
 These syntax will be translated to C code, you can use cwte for error handling, cwte-generator transform it to C, and you compile/run/debug the generated C code.      
 In short, cwte is just for zipping complex unhappy path logic, and make it more readable.    
 I just hope it can save some time, so I can have an ice cream.    
-# The core:
+# ::::< The core:
 `:<` Is the only core feature, it's a tail after func call, for error handling.     
 The tail should never wag the cat, this means sad path handler should never pollute the core logic, and cwte will also never pollute other c code.     
 The tail should never wag the cat also means `tail` command should not call `|cat` :D   
-# The philosophy:
+# ::::< The philosophy:
 - Cwte has no super cow powers.    
 - Cwte is a postfix, a tail, but not the cat (C-lang).    
 - The tail can/should/will/must never wag the cat.
@@ -140,7 +140,7 @@ In one word, cwte makes a zipped error handling in C, and it's kawaii.
 ```
 
 .hce should only contain the three simple commands, and other definations, like `#define panic()`, `#define log()`, and `typedef` should be in .ce or your .h, as .hce is just `happy c ending/handle c error` delclaration file.    
-# cwte implementation:
+# ::::< cwte implementation:
 >"Ohhhhh, memfd, silver bullet for saving data and IPC, so cool, so leeme cook."
 
 cwte generator will be a fully memfd-based immutable artifact pipeline ~~(so fd pipeline is also fp)~~ design, we use memfd to save each layer, and make it immutable to the next layer, and each layer will only act on one feature, without other side effects to the generated code.    
@@ -206,7 +206,7 @@ Maybe we can have a `#[[ce_enforce(func)]]` to enforce you catch result for func
 Maybe one day it can be C-Way-To-Evolve, but at least these ideas shows that c is extensible, and cwte is also.    
 Cwte never assumes it won't become a fossil.   
 "But if we have to evolve, is there a trackable way?"    
-# Ascii logo:
+# ::::< Ascii logo:
 ```
          _-''''-._
        /`          `.
