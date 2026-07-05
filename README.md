@@ -75,10 +75,6 @@ Too ugly you see? I scream, eye scream, my small screen scream, my ADHD scream, 
 seccomp_rule_add() uses va_args, so if you don't use these complex code, you can only use a macro. But in cross-arch CI, it will bomb to TLE, as the pre-compile expansion performance of macro is not good, and qemu is slow.      
 So, I want a:     
 ```c
-#[[ce_reg(seccomp_rule_add, int, _<0)]]
-```
-Then:   
-```c
 seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept), 0) :<;
 seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(accept4), 0) :<;
 seccomp_rule_add(ctx, SCMP_ACT_ALLOW, SCMP_SYS(access), 0) :<;
