@@ -129,7 +129,7 @@ pub fn prepare_layer(mut input: File) -> File {
     mfd_file
 }
 
-pub fn clang_format_final_layer(mut input: File) -> File {
+pub fn clang_format_final_layer(mut input: File, show_warning: bool) -> File {
     /*
      * clang-format the input file, and return the output file.
      * So that users don't need to format again.
@@ -142,24 +142,26 @@ pub fn clang_format_final_layer(mut input: File) -> File {
     input
         .read_to_string(&mut content)
         .expect("Failed to read input file");
-    if content.contains("_CE_SAD")
-        || content.contains("_CE_HAP")
-        || content.contains("_CE_LWE")
-        || content.contains("_CE_NUS")
-        || content.contains("_CE_LAF")
-    {
-        eprintln!("\n{}",
+    if show_warning {
+        if content.contains("_CE_SAD")
+            || content.contains("_CE_HAP")
+            || content.contains("_CE_LWE")
+            || content.contains("_CE_NUS")
+            || content.contains("_CE_LAF")
+        {
+            eprintln!("\n{}",
             "Warning: The output file contains _CE_SAD (:<), _CE_HAP (:>), _CE_LWE (:o), _CE_NUS (::}), or _CE_LAF (:D) marks.
 These marks are used for internal processing and should not appear in the final output.
 Please check If cwte is working correctly, or just fire cwte.".red()
         );
-    }
-    if content.contains("_CE_DFM") {
-        eprintln!(
+        }
+        if content.contains("_CE_DFM") {
+            eprintln!(
             "\n{}",
             "Warning: The output file contains _CE_DFM (:3) mark. Call your LLM to do that for you."
                 .red()
         );
+        }
     }
     // Call clang-format --assume-filename=test.c
     // Write content to clang-format's stdin,

@@ -28,6 +28,7 @@ struct Cli {
 enum Commands {
     Gen { input: String, output: String },
     Scmp { input: String, output: String },
+    Fmt { input: String },
     Version {},
 }
 
@@ -43,7 +44,7 @@ fn cwte_generator(input: &str, output: &str) {
     // Process the memfd file with final layer, and get the new memfd file.
     mfd_file = preproc::final_layer(mfd_file);
     // Format the output with clang_format_final_layer.
-    mfd_file = preproc::clang_format_final_layer(mfd_file);
+    mfd_file = preproc::clang_format_final_layer(mfd_file, true);
     // Write the content of memfd to the output file.
     let mut output_file = fs::File::create(&output).expect("Failed to create output file");
     let mut memfd_content = Vec::new();
@@ -77,7 +78,7 @@ fn scmp_generator(input: &str, output: &str) {
     // Process the memfd file with final layer, and get the new memfd file.
     mfd_file = preproc::final_layer(mfd_file);
     // Format the output with clang_format_final_layer.
-    mfd_file = preproc::clang_format_final_layer(mfd_file);
+    mfd_file = preproc::clang_format_final_layer(mfd_file, true);
     // Write the content of memfd to the output file.
     let mut output_file = fs::File::create(&output).expect("Failed to create output file");
     let mut memfd_content = Vec::new();
@@ -94,6 +95,39 @@ fn scmp_generator(input: &str, output: &str) {
         "{}{}",
         "\nCwte processing completed, output written to ".green(),
         output.blue()
+    );
+    println!(
+        "{}{}",
+        "I hope I'm just a helpful tail ".green(),
+        "::::<".yellow()
+    );
+}
+fn cwte_fmt(input: &str) {
+    let input_file = fs::File::open(input).expect("Failed to open input file");
+    // Process the input file with clang_format_prepare_layer, and get the memfd file.
+    let mut mfd_file = preproc::clang_format_prepare_layer(input_file);
+    // Process the memfd file with clang_format_final_layer, and get the new memfd file.
+    mfd_file = preproc::clang_format_final_layer(mfd_file, false);
+    // Write the content of memfd to the output file.
+    let mut output_file = fs::File::create(&input).expect("Failed to create output file");
+    // Set output_file size to 0, so that we can overwrite the content of the file.
+    output_file
+        .set_len(0)
+        .expect("Failed to set output file size to 0");
+    let mut memfd_content = Vec::new();
+    mfd_file
+        .seek(std::io::SeekFrom::Start(0))
+        .expect("Failed to seek memfd");
+    mfd_file
+        .read_to_end(&mut memfd_content)
+        .expect("Failed to read memfd");
+    output_file
+        .write_all(&memfd_content)
+        .expect("Failed to write to output file");
+    println!(
+        "{}{}",
+        "Cwte formatting completed, output written to ".green(),
+        input.blue()
     );
     println!(
         "{}{}",
@@ -121,6 +155,9 @@ fn main() {
         }
         Commands::Scmp { input, output } => {
             scmp_generator(&input, &output);
+        }
+        Commands::Fmt { input } => {
+            cwte_fmt(&input);
         }
         Commands::Version {} => {
             println!("{}", "\nCwte version 0.1.0\n".green());
