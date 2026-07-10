@@ -40,11 +40,7 @@ pub fn scmp_layer(mut input: File, _file: &str) -> File {
             let fixed = line.replace("_CE_SAD", "");
             writeln!(mfd_file, "res={}", preproc::erase_line_no_mark(&fixed))
                 .expect("Failed to write to file");
-            writeln!(
-                mfd_file,
-                "ruri_check_seccomp_ret(res, container->no_warnings);"
-            )
-            .expect("Failed to write to file");
+            writeln!(mfd_file, "ruri_check_seccomp_ret(res);").expect("Failed to write to file");
             continue;
         }
         // Or, write the line to the output file.
